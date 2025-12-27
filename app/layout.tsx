@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
 import "./globals.css";
+import Music from "../components/Music";
 
 const cairo = Cairo({
   subsets: ["arabic"],
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={cairo.className + " bg-[#f7f3ee] text-gray-800"}>
+        <Music />
         {children}
       </body>
     </html>

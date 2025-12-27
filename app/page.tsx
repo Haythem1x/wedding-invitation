@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import Gallery from "../components/Gallery";
+import Location from "../components/Location";
+import Countdown from "../components/Countdown";
+import Guestbook from "../components/Guestbook";
 
 export default function HomePage() {
   const [opened, setOpened] = useState(false);
@@ -54,6 +58,11 @@ export default function HomePage() {
           <p className="text-lg font-serif text-gray-800">دعوتك لحضور الزفاف</p>
         </motion.div>
       </div>
+
+      <Gallery />
+      <Location />
+      <Countdown targetDate="2024-12-30T19:00:00" />
+      <Guestbook />
     </main>
   );
 }

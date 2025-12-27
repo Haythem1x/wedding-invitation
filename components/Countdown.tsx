@@ -1,60 +1,56 @@
+
 "use client";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
-import { useEffect, useState } from "react";
+const Countdown = ({ targetDate }: { targetDate: string }) => {
+  const calculateTimeLeft = () => {
+    const difference = +new Date(targetDate) - +new Date();
+    let timeLeft = {};
 
-type Props = {
-  targetDate: string;
-};
+    if (difference > 0) {
+      timeLeft = {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      };
+    }
 
-export default function Countdown({ targetDate }: Props) {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+    return timeLeft;
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
-    const target = new Date(targetDate).getTime();
-    if (isNaN(target)) return;
-
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const diff = target - now;
-
-      if (diff <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        clearInterval(interval);
-        return;
-      }
-
-      setTimeLeft({
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((diff / (1000 * 60)) % 60),
-        seconds: Math.floor((diff / 1000) % 60),
-      });
+    const timer = setTimeout(() => {
+      setTimeLeft(calculateTimeLeft());
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, [targetDate]);
+    return () => clearTimeout(timer);
+  });
 
   return (
-    <div className="grid grid-cols-4 gap-4 text-center mt-6">
-      {[
-        { label: "يوم", value: timeLeft.days },
-        { label: "ساعة", value: timeLeft.hours },
-        { label: "دقيقة", value: timeLeft.minutes },
-        { label: "ثانية", value: timeLeft.seconds },
-      ].map((item, i) => (
-        <div
-          key={i}
-          className="bg-[#f7f3ee] rounded-xl p-4 border border-[#e6dbc8]"
-        >
-          <div className="text-2xl font-bold text-[#b59b5b]">{item.value}</div>
-          <div className="text-sm">{item.label}</div>
+    <div className="py-12 bg-white">
+      <div className="container mx-auto px-4">
+        <h2 className="text-4xl font-bold text-center mb-8"> الوقت المتبقي </h2>
+        <div className="flex justify-center space-x-4">
+          {Object.entries(timeLeft).map(([unit, value]) => (
+            <motion.div
+              key={unit}
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="text-5xl font-bold">{value as number}</div>
+              <div className="text-lg">{unit}</div>
+            </motion.div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
-}
+};
+
+export default Countdown;
